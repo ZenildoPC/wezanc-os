@@ -76,6 +76,7 @@ interface TransacaoFinanceira {
   pacoteAssociado?: string;
   valor: number;
   data: string;
+  clienteId?: string;
 }
 
 const COLUNAS_OUTBOUND: { id: StatusPipelineOutbound; titulo: string; agente: string; tagCor: string }[] = [
@@ -299,8 +300,9 @@ export default function WezancOS() {
   };
 
   const excluirCliente = (id: string) => {
-    if (confirm("Tem certeza que deseja excluir permanentemente este cliente da base?")) {
+    if (confirm("Tem certeza que deseja excluir permanentemente este cliente da base? O valor correspondente será removido do financeiro.")) {
       salvarClientes(clientes.filter(c => c.id !== id));
+      salvarTransacoes(transacoes.filter(t => t.clienteId !== id));
     }
   };
 
@@ -620,6 +622,7 @@ export default function WezancOS() {
     const valTabela = getValorTabela(pacote);
     const valPago = Number(valorPago) || 0;
     const desconto = valTabela > valPago ? valTabela - valPago : 0;
+    const clienteIdGerado = clienteEmEdicao ? clienteEmEdicao.id : Date.now().toString();
 
     if (clienteEmEdicao) {
       const atualizados = clientes.map(c => {
@@ -639,15 +642,28 @@ export default function WezancOS() {
         return c;
       });
       salvarClientes(atualizados);
+
+      const transAtualizadas = transacoes.map(t => {
+        if (t.clienteId === clienteEmEdicao.id) {
+          return {
+            ...t,
+            descricao: `Projeto: ${nome} (${pacote})`,
+            pacoteAssociado: pacote,
+            valor: valPago
+          };
+        }
+        return t;
+      });
+      salvarTransacoes(transAtualizadas);
     } else {
       const tarefasIniciais: TarefaTecnica[] = TAREFAS_PADRAO_TECNICA.map((t, idx) => ({
-        id: `${Date.now()}_${idx}`,
+        id: `${clienteIdGerado}_${idx}`,
         titulo: t,
         concluida: false
       }));
 
       const novo: Cliente = {
-        id: Date.now().toString(),
+        id: clienteIdGerado,
         nome, empresa, whatsapp, documento, pacote, formaPagamento, origem, motivoNaoFechou,
         notasAnotacoes, temPlanoManutencao, 
         valorPlanoManutencao: temPlanoManutencao ? Number(valorPlanoManutencao) || 0 : 0, 
@@ -664,7 +680,8 @@ export default function WezancOS() {
       };
 
       const novaTransacao: TransacaoFinanceira = {
-        id: Date.now().toString() + "_t",
+        id: clienteIdGerado + "_t",
+        clienteId: clienteIdGerado,
         descricao: `Projeto: ${nome} (${pacote})`,
         tipo: "Receita",
         pacoteAssociado: pacote,
@@ -705,19 +722,35 @@ export default function WezancOS() {
     return c.temPlanoManutencao && matchTexto && matchVencimento;
   });
 
-  const totalMRR = clientes.filter(c => c.temPlanoManutencao).reduce((acc, c) => acc + (Number(c.valorPlanoManutencao) || 0), 0);
+  const totalMRR = clientes.filter(c => c.temPlanoManutencao && !eClienteNaoFechou(c)).reduce((acc, c) => acc + (Number(c.valorPlanoManutencao) || 0), 0);
   const clientesAtivosEmProducao = clientes.filter(c => !eClienteNaoFechou(c) && !estaEmGarantiaOuConcluido(c));
 
-  const totalReceitasProjetos = clientes.reduce((acc, c) => acc + c.valorPago, 0);
-  const totalReceitasTransacoes = transacoes.filter(t => t.tipo === "Receita" || t.tipo === "Manutenção MRR").reduce((acc, t) => acc + t.valor, 0);
+  // CÁLCULO FINANCEIRO ATUALIZADO (EXCLUI CLIENTES NÃO FECHADOS)
+  const totalReceitasProjetos = clientes
+    .filter(c => !eClienteNaoFechou(c))
+    .reduce((acc, c) => acc + c.valorPago, 0);
+
+  const totalReceitasTransacoes = transacoes
+    .filter(t => (t.tipo === "Receita" || t.tipo === "Manutenção MRR") && !t.clienteId)
+    .reduce((acc, t) => acc + t.valor, 0);
+
   const totalReceitas = totalReceitasProjetos + totalReceitasTransacoes;
 
   const totalDespesas = transacoes.filter(t => t.tipo === "Despesa").reduce((acc, t) => acc + t.valor, 0);
   const lucroLiquido = totalReceitas - totalDespesas;
 
-  const receitaLandingPage = clientes.filter(c => c.pacote === "Landing Page Express").reduce((acc, c) => acc + c.valorPago, 0) + transacoes.filter(t => t.pacoteAssociado === "Landing Page Express" && t.tipo === "Receita").reduce((acc, t) => acc + t.valor, 0);
-  const receitaInstitucional = clientes.filter(c => c.pacote === "Site Institucional").reduce((acc, c) => acc + c.valorPago, 0) + transacoes.filter(t => t.pacoteAssociado === "Site Institucional" && t.tipo === "Receita").reduce((acc, t) => acc + t.valor, 0);
-  const receitaEcommerce = clientes.filter(c => c.pacote === "E-commerce").reduce((acc, c) => acc + c.valorPago, 0) + transacoes.filter(t => t.pacoteAssociado === "E-commerce" && t.tipo === "Receita").reduce((acc, t) => acc + t.valor, 0);
+  const receitaLandingPage = clientes
+    .filter(c => c.pacote === "Landing Page Express" && !eClienteNaoFechou(c))
+    .reduce((acc, c) => acc + c.valorPago, 0) + transacoes.filter(t => t.pacoteAssociado === "Landing Page Express" && t.tipo === "Receita" && !t.clienteId).reduce((acc, t) => acc + t.valor, 0);
+  
+  const receitaInstitucional = clientes
+    .filter(c => c.pacote === "Site Institucional" && !eClienteNaoFechou(c))
+    .reduce((acc, c) => acc + c.valorPago, 0) + transacoes.filter(t => t.pacoteAssociado === "Site Institucional" && t.tipo === "Receita" && !t.clienteId).reduce((acc, t) => acc + t.valor, 0);
+  
+  const receitaEcommerce = clientes
+    .filter(c => c.pacote === "E-commerce" && !eClienteNaoFechou(c))
+    .reduce((acc, c) => acc + c.valorPago, 0) + transacoes.filter(t => t.pacoteAssociado === "E-commerce" && t.tipo === "Receita" && !t.clienteId).reduce((acc, t) => acc + t.valor, 0);
+  
   const receitaManutencaoMRR = transacoes.filter(t => t.tipo === "Manutenção MRR").reduce((acc, t) => acc + t.valor, 0) + (totalMRR * 1);
 
   const transacoesFiltradas = transacoes.filter(t => {
@@ -783,10 +816,9 @@ export default function WezancOS() {
         </div>
       )}
 
-      {/* SIDEBAR DESKTOP & IPAD (RETRÁTIL LIMPA E HARMONIOSA) */}
+      {/* SIDEBAR DESKTOP & IPAD */}
       <aside className={`bg-[#02040a] border-r border-slate-800/80 hidden md:flex flex-col justify-between sticky top-0 h-screen z-45 shrink-0 shadow-2xl transition-all duration-300 ${sidebarRetraida ? "w-20" : "w-72"}`}>
         <div>
-          {/* TOPO SIDEBAR CORRIGIDO C/ FLEXBOX SEGURO */}
           <div className={`p-4 border-b border-slate-800/80 flex items-center ${sidebarRetraida ? "flex-col gap-3 justify-center py-5 px-2" : "justify-between"}`}>
             <div className={`flex items-center gap-3 overflow-hidden ${sidebarRetraida ? "justify-center w-full" : ""}`}>
               <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600 p-[1.5px] shadow-xl shadow-cyan-500/30 shrink-0">
@@ -1453,7 +1485,7 @@ export default function WezancOS() {
 
               <div className="bg-[#070b19] border border-slate-800 rounded-3xl p-6 shadow-2xl backdrop-blur-md space-y-5 overflow-x-auto">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  <h3 className="text-sm font-black text-white whitespace-nowrap">Transações & Lançamentos Financeiros</h3>
+                  <h3 className="text-sm font-black text-white whitespace-nowrap">Transações & Lançamentos Financeiros (Integrado c/ Clientes)</h3>
                   <button onClick={() => setModalTransacao(true)} className="w-full sm:w-auto bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-950 font-black px-4.5 py-3 rounded-xl text-xs cursor-pointer shadow-md whitespace-nowrap">
                     + Novo Lançamento
                   </button>
@@ -1470,33 +1502,50 @@ export default function WezancOS() {
                   <input type="date" value={filtroDataFim} onChange={e => setFiltroDataFim(e.target.value)} className="bg-[#040612] border border-slate-800 rounded-xl p-3.5 text-xs text-white outline-none" />
                 </div>
 
-                <table className="w-full text-left text-xs min-w-[650px]">
+                <table className="w-full text-left text-xs min-w-[700px]">
                   <thead className="border-b border-slate-800 text-slate-400 uppercase font-mono text-[10px]">
                     <tr>
                       <th className="pb-3 whitespace-nowrap">Data</th>
                       <th className="pb-3 whitespace-nowrap">Descrição</th>
                       <th className="pb-3 whitespace-nowrap">Tipo / Categoria</th>
                       <th className="pb-3 text-right whitespace-nowrap">Valor</th>
+                      <th className="pb-3 text-right whitespace-nowrap">Ações / Perfil</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800/60 font-medium">
-                    {transacoesFiltradas.map((t) => (
-                      <tr key={t.id} className="hover:bg-slate-800/30">
-                        <td className="py-4 font-mono text-slate-400 whitespace-nowrap">{t.data}</td>
-                        <td className="py-4 text-white font-bold truncate max-w-[250px]">{t.descricao}</td>
-                        <td className="py-4 whitespace-nowrap">
-                          <span className={`px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase ${t.tipo === "Receita" || t.tipo === "Manutenção MRR" ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30" : "bg-rose-500/15 text-rose-400 border border-rose-500/30"}`}>
-                            {t.tipo} {t.pacoteAssociado ? `• ${t.pacoteAssociado}` : ""}
-                          </span>
-                        </td>
-                        <td className={`py-4 text-right font-mono font-black whitespace-nowrap ${t.tipo === "Receita" || t.tipo === "Manutenção MRR" ? "text-emerald-400" : "text-rose-400"}`}>
-                          {t.tipo === "Receita" || t.tipo === "Manutenção MRR" ? `+ R$ ${t.valor.toLocaleString("pt-BR")}` : `- R$ ${t.valor.toLocaleString("pt-BR")}`}
-                        </td>
-                      </tr>
-                    ))}
+                    {transacoesFiltradas.map((t) => {
+                      const clienteVinculado = clientes.find(c => c.id === t.clienteId || t.descricao.includes(c.nome));
+
+                      return (
+                        <tr key={t.id} className="hover:bg-slate-800/30">
+                          <td className="py-4 font-mono text-slate-400 whitespace-nowrap">{t.data}</td>
+                          <td className="py-4 text-white font-bold truncate max-w-[220px]">{t.descricao}</td>
+                          <td className="py-4 whitespace-nowrap">
+                            <span className={`px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase ${t.tipo === "Receita" || t.tipo === "Manutenção MRR" ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30" : "bg-rose-500/15 text-rose-400 border border-rose-500/30"}`}>
+                              {t.tipo} {t.pacoteAssociado ? `• ${t.pacoteAssociado}` : ""}
+                            </span>
+                          </td>
+                          <td className={`py-4 text-right font-mono font-black whitespace-nowrap ${t.tipo === "Receita" || t.tipo === "Manutenção MRR" ? "text-emerald-400" : "text-rose-400"}`}>
+                            {t.tipo === "Receita" || t.tipo === "Manutenção MRR" ? `+ R$ ${t.valor.toLocaleString("pt-BR")}` : `- R$ ${t.valor.toLocaleString("pt-BR")}`}
+                          </td>
+                          <td className="py-4 text-right whitespace-nowrap">
+                            {clienteVinculado ? (
+                              <button 
+                                onClick={() => abrirModalPerfil(clienteVinculado)}
+                                className="bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 border border-cyan-500/40 px-3 py-1.5 rounded-xl text-[11px] font-bold inline-flex items-center gap-1.5 cursor-pointer shadow-sm transition"
+                              >
+                                <User className="w-3.5 h-3.5 text-cyan-400 shrink-0" /> Abrir Perfil
+                              </button>
+                            ) : (
+                              <span className="text-slate-500 text-[10px] italic">Sem vínculo direto</span>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
                     {transacoesFiltradas.length === 0 && (
                       <tr>
-                        <td colSpan={4} className="py-8 text-center text-slate-400 font-mono">Nenhuma transação encontrada no período.</td>
+                        <td colSpan={5} className="py-8 text-center text-slate-400 font-mono">Nenhuma transação encontrada no período.</td>
                       </tr>
                     )}
                   </tbody>
@@ -1508,7 +1557,7 @@ export default function WezancOS() {
         </div>
       </main>
 
-      {/* MODAIS (MANTIDOS E COMPATÍVEIS) */}
+      {/* MODAIS */}
       {modalCliente && (
         <div className="fixed inset-0 bg-[#040612]/90 backdrop-blur-xl flex items-center justify-center p-4 z-50">
           <div className="bg-[#070b19] border border-slate-800 rounded-3xl w-full max-w-xl p-6 sm:p-8 shadow-2xl relative z-50 max-h-[90vh] overflow-y-auto">
@@ -1614,6 +1663,7 @@ export default function WezancOS() {
             <div className="space-y-4 text-xs">
               <p className="text-slate-400">Empresa: <strong className="text-white">{modalPerfilCliente.empresa}</strong></p>
               <p className="text-slate-400">WhatsApp: <strong className="text-cyan-400 font-mono">{modalPerfilCliente.whatsapp}</strong></p>
+              <p className="text-slate-400">Pacote: <strong className="text-pink-400">{modalPerfilCliente.pacote}</strong> (R$ {modalPerfilCliente.valorPago})</p>
               <p className="text-slate-400">Garantia: <strong className="text-emerald-400 font-mono">{calcularTempoRestanteGarantia(modalPerfilCliente.dataInicioGarantia).texto}</strong></p>
               <div className="bg-[#040612] p-4 rounded-2xl border border-slate-800">
                 <p className="text-slate-300 italic">{modalPerfilCliente.notasAnotacoes || "Sem anotações."}</p>
