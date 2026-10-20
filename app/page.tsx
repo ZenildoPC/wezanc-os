@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { 
   Plus, Search, ShieldCheck, Phone, Trash2, Zap, LayoutDashboard,
   Users, BarChart3, ExternalLink, Bot, Edit3, FileText, 
-  CreditCard, MessageCircle, AlertTriangle, Printer, Share2, CheckCircle2, Clock, Send, Filter, X, UserX, RefreshCw, Download, Upload, Shield, FileDown, User, NotebookPen, DollarSign, Repeat, CheckSquare, Square, Target, TrendingUp, TrendingDown, ArrowUpRight, Printer as PrinterIcon, Menu
+  CreditCard, MessageCircle, AlertTriangle, Printer, Share2, CheckCircle2, Clock, Send, Filter, X, UserX, RefreshCw, Download, Upload, Shield, FileDown, User, NotebookPen, DollarSign, Repeat, CheckSquare, Square, Target, TrendingUp, TrendingDown, ArrowUpRight, Printer as PrinterIcon, Menu, ChevronLeft, ChevronRight
 } from "lucide-react";
 
 type StatusPipelineOutbound = 
@@ -147,6 +147,8 @@ const AGENTES_IA = [
 export default function WezancOS() {
   const [menuAtivo, setMenuAtivo] = useState<"kanban" | "inbound" | "tarefas" | "manutencao" | "naofechados" | "agentes" | "clientes" | "financeiro" | "prospects">("prospects");
   const [menuMobileAberto, setMenuMobileAberto] = useState(false);
+  const [sidebarRetraida, setSidebarRetraida] = useState(false);
+  
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [transacoes, setTransacoes] = useState<TransacaoFinanceira[]>([]);
   const [prospects, setProspects] = useState<ProspectLead[]>([]);
@@ -753,105 +755,127 @@ export default function WezancOS() {
           </div>
           <span className="font-mono font-black text-sm text-white">WEZANC<span className="text-cyan-400">.OS</span></span>
         </div>
-        <button onClick={() => setMenuMobileAberto(!menuMobileAberto)} className="bg-slate-800 text-cyan-400 p-2.5 rounded-xl">
+        <button onClick={() => setMenuMobileAberto(!menuMobileAberto)} className="bg-slate-800 text-cyan-400 p-2.5 rounded-xl cursor-pointer">
           <Menu className="w-5 h-5" />
         </button>
       </div>
 
-      {/* MENU MOBILE / IPAD OVERLAY */}
+      {/* MENU MOBILE / OVERLAY */}
       {menuMobileAberto && (
         <div className="md:hidden fixed inset-0 z-50 bg-[#040612]/95 backdrop-blur-2xl p-6 flex flex-col justify-between overflow-y-auto">
           <div className="space-y-6">
             <div className="flex justify-between items-center border-b border-slate-800 pb-4">
               <span className="font-mono text-xs font-bold text-cyan-400 uppercase tracking-widest">Navegação Wezanc OS</span>
-              <button onClick={() => setMenuMobileAberto(false)} className="text-slate-400 p-2 bg-slate-800 rounded-xl">✕</button>
+              <button onClick={() => setMenuMobileAberto(false)} className="text-slate-400 p-2 bg-slate-800 rounded-xl cursor-pointer">✕</button>
             </div>
             <nav className="space-y-2">
-              <button onClick={() => { setMenuAtivo("prospects"); setMenuMobileAberto(false); }} className="w-full text-left px-4 py-3 rounded-xl bg-slate-800/50 text-white font-bold text-sm">🎯 Banco de Leads</button>
-              <button onClick={() => { setMenuAtivo("inbound"); setMenuMobileAberto(false); }} className="w-full text-left px-4 py-3 rounded-xl bg-slate-800/50 text-white font-bold text-sm">📱 Inbound (Instagram)</button>
-              <button onClick={() => { setMenuAtivo("kanban"); setMenuMobileAberto(false); }} className="w-full text-left px-4 py-3 rounded-xl bg-slate-800/50 text-white font-bold text-sm">📊 Outbound Ativo</button>
-              <button onClick={() => { setMenuAtivo("naofechados"); setMenuMobileAberto(false); }} className="w-full text-left px-4 py-3 rounded-xl bg-slate-800/50 text-white font-bold text-sm">❌ Não Fechados</button>
-              <button onClick={() => { setMenuAtivo("tarefas"); setMenuMobileAberto(false); }} className="w-full text-left px-4 py-3 rounded-xl bg-slate-800/50 text-white font-bold text-sm">✅ Sprints & Tarefas</button>
-              <button onClick={() => { setMenuAtivo("manutencao"); setMenuMobileAberto(false); }} className="w-full text-left px-4 py-3 rounded-xl bg-slate-800/50 text-white font-bold text-sm">🔄 Manutenção MRR</button>
-              <button onClick={() => { setMenuAtivo("clientes"); setMenuMobileAberto(false); }} className="w-full text-left px-4 py-3 rounded-xl bg-slate-800/50 text-white font-bold text-sm">👥 Base 360° Clientes</button>
-              <button onClick={() => { setMenuAtivo("financeiro"); setMenuMobileAberto(false); }} className="w-full text-left px-4 py-3 rounded-xl bg-slate-800/50 text-white font-bold text-sm">💰 Financeiro & PDF</button>
-              <button onClick={() => { setMenuAtivo("agentes"); setMenuMobileAberto(false); }} className="w-full text-left px-4 py-3 rounded-xl bg-slate-800/50 text-white font-bold text-sm">🤖 Agentes de IA</button>
+              <button onClick={() => { setMenuAtivo("prospects"); setMenuMobileAberto(false); }} className="w-full text-left px-4 py-3 rounded-xl bg-slate-800/50 text-white font-bold text-sm cursor-pointer">🎯 Banco de Leads</button>
+              <button onClick={() => { setMenuAtivo("inbound"); setMenuMobileAberto(false); }} className="w-full text-left px-4 py-3 rounded-xl bg-slate-800/50 text-white font-bold text-sm cursor-pointer">📱 Inbound (Instagram)</button>
+              <button onClick={() => { setMenuAtivo("kanban"); setMenuMobileAberto(false); }} className="w-full text-left px-4 py-3 rounded-xl bg-slate-800/50 text-white font-bold text-sm cursor-pointer">📊 Outbound Ativo</button>
+              <button onClick={() => { setMenuAtivo("naofechados"); setMenuMobileAberto(false); }} className="w-full text-left px-4 py-3 rounded-xl bg-slate-800/50 text-white font-bold text-sm cursor-pointer">❌ Não Fechados</button>
+              <button onClick={() => { setMenuAtivo("tarefas"); setMenuMobileAberto(false); }} className="w-full text-left px-4 py-3 rounded-xl bg-slate-800/50 text-white font-bold text-sm cursor-pointer">✅ Sprints & Tarefas</button>
+              <button onClick={() => { setMenuAtivo("manutencao"); setMenuMobileAberto(false); }} className="w-full text-left px-4 py-3 rounded-xl bg-slate-800/50 text-white font-bold text-sm cursor-pointer">🔄 Manutenção MRR</button>
+              <button onClick={() => { setMenuAtivo("clientes"); setMenuMobileAberto(false); }} className="w-full text-left px-4 py-3 rounded-xl bg-slate-800/50 text-white font-bold text-sm cursor-pointer">👥 Base 360° Clientes</button>
+              <button onClick={() => { setMenuAtivo("financeiro"); setMenuMobileAberto(false); }} className="w-full text-left px-4 py-3 rounded-xl bg-slate-800/50 text-white font-bold text-sm cursor-pointer">💰 Financeiro & PDF</button>
+              <button onClick={() => { setMenuAtivo("agentes"); setMenuMobileAberto(false); }} className="w-full text-left px-4 py-3 rounded-xl bg-slate-800/50 text-white font-bold text-sm cursor-pointer">🤖 Agentes de IA</button>
             </nav>
           </div>
         </div>
       )}
 
-      {/* SIDEBAR DESKTOP & IPAD HORIZONTAL */}
-      <aside className="w-72 bg-[#02040a] border-r border-slate-800/80 hidden md:flex flex-col justify-between sticky top-0 h-screen z-40 shrink-0 shadow-2xl">
+      {/* SIDEBAR DESKTOP & IPAD (RETRÁTIL LIMPA E HARMONIOSA) */}
+      <aside className={`bg-[#02040a] border-r border-slate-800/80 hidden md:flex flex-col justify-between sticky top-0 h-screen z-45 shrink-0 shadow-2xl transition-all duration-300 ${sidebarRetraida ? "w-20" : "w-72"}`}>
         <div>
-          <div className="p-6 border-b border-slate-800/80 flex items-center gap-3.5 bg-gradient-to-r from-cyan-500/15 via-transparent to-transparent">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600 p-[1.5px] shadow-xl shadow-cyan-500/30">
-              <div className="w-full h-full bg-[#02040a] rounded-[14px] flex items-center justify-center">
-                <span className="text-cyan-400 font-black font-mono text-xl tracking-tighter">W</span>
+          {/* TOPO SIDEBAR CORRIGIDO C/ FLEXBOX SEGURO */}
+          <div className={`p-4 border-b border-slate-800/80 flex items-center ${sidebarRetraida ? "flex-col gap-3 justify-center py-5 px-2" : "justify-between"}`}>
+            <div className={`flex items-center gap-3 overflow-hidden ${sidebarRetraida ? "justify-center w-full" : ""}`}>
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600 p-[1.5px] shadow-xl shadow-cyan-500/30 shrink-0">
+                <div className="w-full h-full bg-[#02040a] rounded-[14px] flex items-center justify-center">
+                  <span className="text-cyan-400 font-black font-mono text-lg tracking-tighter">W</span>
+                </div>
               </div>
+              {!sidebarRetraida && (
+                <div className="truncate">
+                  <h1 className="text-xs font-black tracking-wider text-white font-mono truncate">
+                    WEZANC<span className="text-cyan-400">.OS</span>
+                  </h1>
+                  <span className="text-[9px] text-cyan-400/90 block font-mono font-bold tracking-widest uppercase truncate">iPad Edition v44</span>
+                </div>
+              )}
             </div>
-            <div>
-              <h1 className="text-sm font-black tracking-wider text-white font-mono">
-                WEZANC<span className="text-cyan-400">.OS</span>
-              </h1>
-              <span className="text-[9px] text-cyan-400/90 block font-mono font-bold tracking-widest uppercase">iPad Edition v44</span>
-            </div>
+
+            <button 
+              onClick={() => setSidebarRetraida(!sidebarRetraida)} 
+              className={`bg-slate-800/90 hover:bg-slate-700 text-slate-300 hover:text-white p-2 rounded-xl transition cursor-pointer shrink-0 flex items-center justify-center shadow-md ${sidebarRetraida ? "w-full" : "ml-1"}`}
+              title={sidebarRetraida ? "Expandir Menu" : "Recolher Menu"}
+            >
+              {sidebarRetraida ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+            </button>
           </div>
 
-          <nav className="p-4 space-y-4">
+          <nav className="p-3 space-y-4 overflow-y-auto max-h-[calc(100vh-140px)]">
             <div>
-              <span className="px-3 text-[9px] font-mono font-bold uppercase tracking-widest text-slate-400 block mb-2">Prospecção & Leads</span>
+              {!sidebarRetraida && <span className="px-3 text-[9px] font-mono font-bold uppercase tracking-widest text-slate-400 block mb-2 whitespace-nowrap">Prospecção & Leads</span>}
               <div className="space-y-1">
-                <button onClick={() => setMenuAtivo("prospects")} className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${menuAtivo === "prospects" ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/25 font-black" : "text-slate-400 hover:text-white hover:bg-slate-800/40"}`}>
-                  <Target className="w-4 h-4 text-amber-400" /> Banco de Leads ({prospects.length})
+                <button onClick={() => setMenuAtivo("prospects")} title="Banco de Leads" className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${sidebarRetraida ? "justify-center px-2" : ""} ${menuAtivo === "prospects" ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/25 font-black" : "text-slate-400 hover:text-white hover:bg-slate-800/40"}`}>
+                  <Target className="w-4 h-4 text-amber-400 shrink-0" />
+                  {!sidebarRetraida && <span className="whitespace-nowrap truncate">Banco de Leads ({prospects.length})</span>}
                 </button>
-                <button onClick={() => setMenuAtivo("inbound")} className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${menuAtivo === "inbound" ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg shadow-pink-500/25 font-black" : "text-slate-400 hover:text-white hover:bg-slate-800/40"}`}>
-                  <Share2 className="w-4 h-4 text-pink-400" /> Inbound (Instagram)
+                <button onClick={() => setMenuAtivo("inbound")} title="Inbound (Instagram)" className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${sidebarRetraida ? "justify-center px-2" : ""} ${menuAtivo === "inbound" ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg shadow-pink-500/25 font-black" : "text-slate-400 hover:text-white hover:bg-slate-800/40"}`}>
+                  <Share2 className="w-4 h-4 text-pink-400 shrink-0" />
+                  {!sidebarRetraida && <span className="whitespace-nowrap truncate">Inbound (Instagram)</span>}
                 </button>
-                <button onClick={() => setMenuAtivo("kanban")} className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${menuAtivo === "kanban" ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-lg shadow-cyan-500/25 font-black" : "text-slate-400 hover:text-white hover:bg-slate-800/40"}`}>
-                  <LayoutDashboard className="w-4 h-4 text-cyan-400" /> Outbound Ativo
+                <button onClick={() => setMenuAtivo("kanban")} title="Outbound Ativo" className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${sidebarRetraida ? "justify-center px-2" : ""} ${menuAtivo === "kanban" ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-lg shadow-cyan-500/25 font-black" : "text-slate-400 hover:text-white hover:bg-slate-800/40"}`}>
+                  <LayoutDashboard className="w-4 h-4 text-cyan-400 shrink-0" />
+                  {!sidebarRetraida && <span className="whitespace-nowrap truncate">Outbound Ativo</span>}
                 </button>
-                <button onClick={() => setMenuAtivo("naofechados")} className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${menuAtivo === "naofechados" ? "bg-gradient-to-r from-rose-500 to-orange-600 text-white shadow-lg shadow-rose-500/25 font-black" : "text-slate-400 hover:text-white hover:bg-slate-800/40"}`}>
-                  <UserX className="w-4 h-4 text-rose-400" /> Não Fechados ({clientesNaoFechados.length})
+                <button onClick={() => setMenuAtivo("naofechados")} title="Não Fechados" className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${sidebarRetraida ? "justify-center px-2" : ""} ${menuAtivo === "naofechados" ? "bg-gradient-to-r from-rose-500 to-orange-600 text-white shadow-lg shadow-rose-500/25 font-black" : "text-slate-400 hover:text-white hover:bg-slate-800/40"}`}>
+                  <UserX className="w-4 h-4 text-rose-400 shrink-0" />
+                  {!sidebarRetraida && <span className="whitespace-nowrap truncate">Não Fechados ({clientesNaoFechados.length})</span>}
                 </button>
               </div>
             </div>
 
             <div>
-              <span className="px-3 text-[9px] font-mono font-bold uppercase tracking-widest text-slate-400 block mb-2">Operações & Gestão</span>
+              {!sidebarRetraida && <span className="px-3 text-[9px] font-mono font-bold uppercase tracking-widest text-slate-400 block mb-2 whitespace-nowrap">Operações & Gestão</span>}
               <div className="space-y-1">
-                <button onClick={() => setMenuAtivo("tarefas")} className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${menuAtivo === "tarefas" ? "bg-gradient-to-r from-indigo-500 to-blue-600 text-white shadow-lg shadow-indigo-500/25 font-black" : "text-slate-400 hover:text-white hover:bg-slate-800/40"}`}>
-                  <CheckSquare className="w-4 h-4 text-indigo-400" /> Sprints & Tarefas
+                <button onClick={() => setMenuAtivo("tarefas")} title="Sprints & Tarefas" className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${sidebarRetraida ? "justify-center px-2" : ""} ${menuAtivo === "tarefas" ? "bg-gradient-to-r from-indigo-500 to-blue-600 text-white shadow-lg shadow-indigo-500/25 font-black" : "text-slate-400 hover:text-white hover:bg-slate-800/40"}`}>
+                  <CheckSquare className="w-4 h-4 text-indigo-400 shrink-0" />
+                  {!sidebarRetraida && <span className="whitespace-nowrap truncate">Sprints & Tarefas</span>}
                 </button>
-                <button onClick={() => setMenuAtivo("manutencao")} className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${menuAtivo === "manutencao" ? "bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 shadow-lg shadow-emerald-500/25 font-black" : "text-slate-400 hover:text-white hover:bg-slate-800/40"}`}>
-                  <Repeat className="w-4 h-4 text-emerald-400" /> Manutenção MRR
+                <button onClick={() => setMenuAtivo("manutencao")} title="Manutenção MRR" className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${sidebarRetraida ? "justify-center px-2" : ""} ${menuAtivo === "manutencao" ? "bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 shadow-lg shadow-emerald-500/25 font-black" : "text-slate-400 hover:text-white hover:bg-slate-800/40"}`}>
+                  <Repeat className="w-4 h-4 text-emerald-400 shrink-0" />
+                  {!sidebarRetraida && <span className="whitespace-nowrap truncate">Manutenção MRR</span>}
                 </button>
-                <button onClick={() => setMenuAtivo("clientes")} className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${menuAtivo === "clientes" ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-lg shadow-cyan-500/25 font-black" : "text-slate-400 hover:text-white hover:bg-slate-800/40"}`}>
-                  <Users className="w-4 h-4 text-cyan-400" /> Base 360° Clientes
+                <button onClick={() => setMenuAtivo("clientes")} title="Base 360° Clientes" className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${sidebarRetraida ? "justify-center px-2" : ""} ${menuAtivo === "clientes" ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-lg shadow-cyan-500/25 font-black" : "text-slate-400 hover:text-white hover:bg-slate-800/40"}`}>
+                  <Users className="w-4 h-4 text-cyan-400 shrink-0" />
+                  {!sidebarRetraida && <span className="whitespace-nowrap truncate">Base 360° Clientes</span>}
                 </button>
-                <button onClick={() => setMenuAtivo("financeiro")} className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${menuAtivo === "financeiro" ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-lg shadow-cyan-500/25 font-black" : "text-slate-400 hover:text-white hover:bg-slate-800/40"}`}>
-                  <BarChart3 className="w-4 h-4 text-amber-400" /> Financeiro & MRR
+                <button onClick={() => setMenuAtivo("financeiro")} title="Financeiro & MRR" className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${sidebarRetraida ? "justify-center px-2" : ""} ${menuAtivo === "financeiro" ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-lg shadow-cyan-500/25 font-black" : "text-slate-400 hover:text-white hover:bg-slate-800/40"}`}>
+                  <BarChart3 className="w-4 h-4 text-amber-400 shrink-0" />
+                  {!sidebarRetraida && <span className="whitespace-nowrap truncate">Financeiro & MRR</span>}
                 </button>
               </div>
             </div>
 
             <div>
-              <span className="px-3 text-[9px] font-mono font-bold uppercase tracking-widest text-slate-400 block mb-2">Inteligência Artificial</span>
+              {!sidebarRetraida && <span className="px-3 text-[9px] font-mono font-bold uppercase tracking-widest text-slate-400 block mb-2 whitespace-nowrap">IA & Automação</span>}
               <div className="space-y-1">
-                <button onClick={() => setMenuAtivo("agentes")} className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${menuAtivo === "agentes" ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-lg shadow-cyan-500/25 font-black" : "text-slate-400 hover:text-white hover:bg-slate-800/40"}`}>
-                  <Bot className="w-4 h-4 text-indigo-400" /> Agentes de IA
+                <button onClick={() => setMenuAtivo("agentes")} title="Agentes de IA" className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${sidebarRetraida ? "justify-center px-2" : ""} ${menuAtivo === "agentes" ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-lg shadow-cyan-500/25 font-black" : "text-slate-400 hover:text-white hover:bg-slate-800/40"}`}>
+                  <Bot className="w-4 h-4 text-indigo-400 shrink-0" />
+                  {!sidebarRetraida && <span className="whitespace-nowrap truncate">Agentes de IA</span>}
                 </button>
               </div>
             </div>
           </nav>
         </div>
 
-        <div className="p-4 border-t border-slate-800/80 m-4 bg-[#040612] rounded-2xl border border-cyan-500/20 space-y-2.5 shadow-inner">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold text-emerald-400 uppercase font-mono flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> iPad Ativo</span>
-            <div className="flex gap-1.5">
-              <button onClick={exportarBackupJSON} title="Exportar Backup JSON" className="bg-slate-800 hover:bg-slate-700 text-cyan-400 text-[10px] font-mono px-2.5 py-1 rounded-lg cursor-pointer transition">Exp</button>
-              <label title="Importar Backup JSON" className="bg-slate-800 hover:bg-slate-700 text-emerald-400 text-[10px] font-mono px-2.5 py-1 rounded-lg cursor-pointer transition">Imp
+        <div className={`p-3 border-t border-slate-800/80 m-3 bg-[#040612] rounded-2xl border border-cyan-500/20 space-y-2 shadow-inner ${sidebarRetraida ? "flex flex-col items-center justify-center p-2" : ""}`}>
+          <div className="flex items-center justify-between w-full">
+            {!sidebarRetraida && <span className="text-[10px] font-bold text-emerald-400 uppercase font-mono flex items-center gap-1.5 whitespace-nowrap"><span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> iPad Ativo</span>}
+            <div className={`flex gap-1.5 ${sidebarRetraida ? "flex-col w-full items-center" : ""}`}>
+              <button onClick={exportarBackupJSON} title="Exportar Backup JSON" className="bg-slate-800 hover:bg-slate-700 text-cyan-400 text-[10px] font-mono px-2.5 py-1.5 rounded-lg cursor-pointer transition">Exp</button>
+              <label title="Importar Backup JSON" className="bg-slate-800 hover:bg-slate-700 text-emerald-400 text-[10px] font-mono px-2.5 py-1.5 rounded-lg cursor-pointer transition text-center">Imp
                 <input type="file" accept=".json" onChange={importarBackupJSON} className="hidden" />
               </label>
             </div>
@@ -863,10 +887,10 @@ export default function WezancOS() {
       <main className="flex-1 w-full min-w-0 bg-[#040612] relative z-10 flex flex-col p-4 sm:p-6 lg:p-8">
         <header className="bg-[#040612]/90 backdrop-blur-xl border-b border-slate-800/80 pb-5 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <span className="px-3.5 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 text-[10px] font-mono font-bold uppercase tracking-wider shadow-sm">
+            <span className="px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 text-[10px] font-mono font-bold uppercase tracking-wider shadow-sm whitespace-nowrap">
               Wezanc Technology OS
             </span>
-            <h2 className="text-xl sm:text-2xl font-black text-white capitalize mt-1.5 tracking-tight flex items-center gap-2">
+            <h2 className="text-xl sm:text-2xl font-black text-white capitalize mt-1.5 tracking-tight flex items-center gap-2 whitespace-nowrap truncate">
               {menuAtivo === "prospects" && "Banco de Leads & Pré-Prospecção"}
               {menuAtivo === "inbound" && "Pipeline Inbound (Instagram)"}
               {menuAtivo === "kanban" && "Pipeline Outbound (Ativo)"}
@@ -882,7 +906,7 @@ export default function WezancOS() {
           <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
             <button 
               onClick={() => abrirModalNovo(menuAtivo === "inbound" ? "Inbound (Instagram / Leads)" : "Outbound (Prospecção Ativa)")} 
-              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 text-slate-950 font-black px-5 py-3.5 rounded-2xl text-xs shadow-xl shadow-cyan-500/25 cursor-pointer active:scale-95 transition-all hover:brightness-110"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 text-slate-950 font-black px-5 py-3.5 rounded-2xl text-xs shadow-xl shadow-cyan-500/25 cursor-pointer active:scale-95 transition-all hover:brightness-110 whitespace-nowrap"
             >
               <Plus className="w-4 h-4 stroke-[3]" /> Novo Cliente
             </button>
@@ -896,7 +920,7 @@ export default function WezancOS() {
             <div className="max-w-7xl mx-auto space-y-6">
               <div className="bg-gradient-to-r from-amber-500/20 via-orange-500/10 to-transparent border border-amber-500/30 p-6 rounded-3xl shadow-2xl backdrop-blur-md">
                 <h3 className="text-base font-black text-white flex items-center gap-2">
-                  <Target className="w-5 h-5 text-amber-400" /> Banco de Leads & Pré-Prospecção ({prospects.length})
+                  <Target className="w-5 h-5 text-amber-400 shrink-0" /> Banco de Leads & Pré-Prospecção ({prospects.length})
                 </h3>
                 <p className="text-xs text-slate-300 mt-1">Garimpe leads e envie para o Outbound com 1 clique.</p>
               </div>
@@ -934,7 +958,7 @@ export default function WezancOS() {
                   <input name="pEmpresa" type="text" placeholder="Empresa / Nicho" className="bg-[#040612] border border-slate-800 rounded-xl p-3.5 text-xs text-white outline-none focus:border-amber-500 transition" />
                   <input name="pWhats" type="text" placeholder="WhatsApp (DDD + Número) *" required className="bg-[#040612] border border-slate-800 rounded-xl p-3.5 text-xs text-white outline-none font-mono focus:border-amber-500 transition" />
                   <input name="pNotas" type="text" placeholder="Observações (Instagram, etc)" className="bg-[#040612] border border-slate-800 rounded-xl p-3.5 text-xs text-white outline-none focus:border-amber-500 transition" />
-                  <button type="submit" className="bg-gradient-to-r from-amber-500 to-orange-600 text-white font-black text-xs rounded-xl p-3.5 transition shadow-lg shadow-amber-500/25 cursor-pointer active:scale-95 hover:brightness-110">
+                  <button type="submit" className="bg-gradient-to-r from-amber-500 to-orange-600 text-white font-black text-xs rounded-xl p-3.5 transition shadow-lg shadow-amber-500/25 cursor-pointer active:scale-95 hover:brightness-110 whitespace-nowrap">
                     + Salvar no Banco
                   </button>
                 </form>
@@ -944,28 +968,28 @@ export default function WezancOS() {
                 {prospects.map((p) => (
                   <div key={p.id} className="bg-[#070b19] border border-slate-800/80 rounded-3xl p-6 flex flex-col justify-between shadow-2xl hover:border-slate-700 transition">
                     <div>
-                      <div className="flex justify-between items-start mb-3">
-                        <span className="text-[9px] font-mono font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-md uppercase">
+                      <div className="flex justify-between items-start mb-3 gap-2">
+                        <span className="text-[9px] font-mono font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-md uppercase whitespace-nowrap">
                           Pré-Outbound
                         </span>
-                        <span className="text-[10px] text-slate-400 font-mono">{p.dataAdicao}</span>
+                        <span className="text-[10px] text-slate-400 font-mono whitespace-nowrap">{p.dataAdicao}</span>
                       </div>
-                      <h4 className="font-extrabold text-sm text-white">{p.nome}</h4>
-                      <p className="text-xs text-slate-300 font-medium">{p.empresa || "Sem empresa informada"}</p>
-                      {p.whatsapp && <p className="text-xs text-cyan-400 font-mono font-bold mt-2">📞 {p.whatsapp}</p>}
-                      {p.notas && <p className="text-xs text-slate-300 mt-3 bg-[#040612] p-3 rounded-2xl border border-slate-800/60 italic">{p.notas}</p>}
+                      <h4 className="font-extrabold text-sm text-white truncate">{p.nome}</h4>
+                      <p className="text-xs text-slate-300 font-medium truncate">{p.empresa || "Sem empresa informada"}</p>
+                      {p.whatsapp && <p className="text-xs text-cyan-400 font-mono font-bold mt-2 whitespace-nowrap">📞 {p.whatsapp}</p>}
+                      {p.notas && <p className="text-xs text-slate-300 mt-3 bg-[#040612] p-3 rounded-2xl border border-slate-800/60 italic line-clamp-3">{p.notas}</p>}
                     </div>
 
                     <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between gap-3">
                       <button
                         onClick={() => promoverParaOutbound(p)}
-                        className="w-full bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-950 font-black py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 cursor-pointer active:scale-95 transition hover:brightness-110"
+                        className="w-full bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-950 font-black py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 cursor-pointer active:scale-95 transition hover:brightness-110 whitespace-nowrap"
                       >
                         🚀 Subir p/ Outbound
                       </button>
                       <button
                         onClick={() => { if(confirm("Excluir este prospect?")) salvarProspects(prospects.filter(item => item.id !== p.id)); }}
-                        className="bg-slate-800 hover:bg-rose-950 text-slate-400 hover:text-rose-400 p-3 rounded-xl text-xs transition cursor-pointer"
+                        className="bg-slate-800 hover:bg-rose-950 text-slate-400 hover:text-rose-400 p-3 rounded-xl text-xs transition cursor-pointer shrink-0"
                         title="Excluir Lead"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -984,8 +1008,8 @@ export default function WezancOS() {
 
           {/* ABA 1: INBOUND */}
           {menuAtivo === "inbound" && (
-            <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+            <div className="overflow-x-auto pb-4">
+              <div className="flex gap-4 min-w-[1200px] xl:min-w-0 xl:grid xl:grid-cols-6">
                 {COLUNAS_INBOUND.map((coluna) => {
                   const clientesInboundColuna = clientes.filter(
                     (c) => c.origem === "Inbound (Instagram / Leads)" && 
@@ -995,10 +1019,10 @@ export default function WezancOS() {
                   );
 
                   return (
-                    <div key={coluna.id} className="flex flex-col bg-[#070b19] border border-slate-800 rounded-3xl p-4 shadow-2xl min-w-0 backdrop-blur-md">
+                    <div key={coluna.id} className="flex flex-col bg-[#070b19] border border-slate-800 rounded-3xl p-4 shadow-2xl w-72 xl:w-auto shrink-0 backdrop-blur-md">
                       <div className={`p-3 rounded-2xl border ${coluna.tagCor} mb-4 flex items-center justify-between`}>
                         <h3 className="font-black text-[11px] uppercase tracking-wider truncate">{coluna.titulo}</h3>
-                        <span className="bg-[#040612] px-2.5 py-1 rounded-xl text-[10px] font-mono font-black text-white border border-slate-700">
+                        <span className="bg-[#040612] px-2.5 py-1 rounded-xl text-[10px] font-mono font-black text-white border border-slate-700 ml-2 shrink-0">
                           {clientesInboundColuna.length}
                         </span>
                       </div>
@@ -1006,37 +1030,37 @@ export default function WezancOS() {
                       <div className="flex flex-col gap-3 flex-1">
                         {clientesInboundColuna.map((cliente) => (
                           <div key={cliente.id} className="bg-[#0b1021] border border-slate-800 p-4 rounded-2xl shadow-xl relative group hover:border-slate-700 transition">
-                            <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center justify-between gap-2 mb-2">
                               <span className="text-[9px] font-black px-2 py-0.5 rounded-md bg-pink-500/15 text-pink-400 border border-pink-500/30 uppercase font-mono truncate">
                                 {cliente.pacote}
                               </span>
-                              <div className="flex items-center gap-1">
-                                <button onClick={() => abrirModalPerfil(cliente)} className="text-slate-400 hover:text-cyan-400 p-1.5 cursor-pointer" title="Ver Perfil"><User className="w-4 h-4" /></button>
-                                <button onClick={() => abrirModalEditar(cliente)} className="text-slate-400 hover:text-cyan-400 p-1.5 cursor-pointer" title="Editar"><Edit3 className="w-4 h-4" /></button>
-                                <button onClick={() => marcarComoNaoFechou(cliente.id)} className="text-slate-400 hover:text-rose-400 p-1.5 cursor-pointer" title="Mover para Não Fechou"><UserX className="w-4 h-4" /></button>
-                                <button onClick={() => excluirCliente(cliente.id)} className="text-slate-400 hover:text-rose-500 p-1.5 cursor-pointer" title="Excluir Permanentemente"><Trash2 className="w-4 h-4" /></button>
+                              <div className="flex items-center gap-1 shrink-0">
+                                <button onClick={() => abrirModalPerfil(cliente)} className="text-slate-400 hover:text-cyan-400 p-1 cursor-pointer"><User className="w-3.5 h-3.5" /></button>
+                                <button onClick={() => abrirModalEditar(cliente)} className="text-slate-400 hover:text-cyan-400 p-1 cursor-pointer"><Edit3 className="w-3.5 h-3.5" /></button>
+                                <button onClick={() => marcarComoNaoFechou(cliente.id)} className="text-slate-400 hover:text-rose-400 p-1 cursor-pointer"><UserX className="w-3.5 h-3.5" /></button>
+                                <button onClick={() => excluirCliente(cliente.id)} className="text-slate-400 hover:text-rose-500 p-1 cursor-pointer"><Trash2 className="w-3.5 h-3.5" /></button>
                               </div>
                             </div>
 
                             <h4 className="font-extrabold text-xs text-slate-100 truncate">{cliente.nome}</h4>
                             <p className="text-[10px] text-slate-300 font-medium truncate">{cliente.empresa}</p>
 
-                            <div className="mt-3 bg-[#040612] border border-slate-800 p-2.5 rounded-xl flex items-center justify-between font-mono">
-                              <strong className="text-emerald-400 text-xs font-black">R$ {cliente.valorPago}</strong>
-                              <span className="text-[9px] text-amber-400 font-bold">{cliente.formaPagamento}</span>
+                            <div className="mt-3 bg-[#040612] border border-slate-800 p-2.5 rounded-xl flex items-center justify-between font-mono gap-2">
+                              <strong className="text-emerald-400 text-xs font-black whitespace-nowrap">R$ {cliente.valorPago}</strong>
+                              <span className="text-[9px] text-amber-400 font-bold truncate">{cliente.formaPagamento}</span>
                             </div>
 
                             {deveMostrarBotaoContrato(cliente) && (
-                              <button onClick={() => setModalContrato(cliente)} className="mt-3 w-full bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 border border-cyan-500/40 py-2 px-3 rounded-xl text-[10px] font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-md transition">
-                                <FileText className="w-3.5 h-3.5 text-cyan-400" /> Gerar Contrato PDF
+                              <button onClick={() => setModalContrato(cliente)} className="mt-3 w-full bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 border border-cyan-500/40 py-2 px-3 rounded-xl text-[10px] font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-md transition whitespace-nowrap">
+                                <FileText className="w-3.5 h-3.5 text-cyan-400 shrink-0" /> Gerar Contrato PDF
                               </button>
                             )}
 
                             <div className="mt-3 pt-3 border-t border-slate-800/80 flex items-center justify-between">
-                              <span className="text-[9px] text-slate-400 uppercase font-mono font-bold">Mover:</span>
+                              <span className="text-[9px] text-slate-400 uppercase font-mono font-bold whitespace-nowrap">Mover:</span>
                               <div className="flex items-center gap-1.5">
                                 {COLUNAS_INBOUND.map((col) => (
-                                  <button key={col.id} onClick={() => moverStatusInbound(cliente.id, col.id)} title={col.titulo} className={`w-4 h-4 rounded-full cursor-pointer transition ${cliente.statusInbound === col.id ? "bg-pink-400 ring-2 ring-pink-400/30 scale-110" : "bg-slate-700 hover:bg-slate-500"}`} />
+                                  <button key={col.id} onClick={() => moverStatusInbound(cliente.id, col.id)} title={col.titulo} className={`w-3.5 h-3.5 rounded-full cursor-pointer transition ${cliente.statusInbound === col.id ? "bg-pink-400 ring-2 ring-pink-400/30 scale-110" : "bg-slate-700 hover:bg-slate-500"}`} />
                                 ))}
                               </div>
                             </div>
@@ -1052,8 +1076,8 @@ export default function WezancOS() {
 
           {/* ABA 2: OUTBOUND */}
           {menuAtivo === "kanban" && (
-            <div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+            <div className="overflow-x-auto pb-4">
+              <div className="flex gap-4 min-w-[1000px] xl:min-w-0 xl:grid xl:grid-cols-5">
                 {COLUNAS_OUTBOUND.map((coluna) => {
                   const clientesColuna = clientes.filter(
                     (c) => c.origem !== "Inbound (Instagram / Leads)" && 
@@ -1063,10 +1087,10 @@ export default function WezancOS() {
                   );
 
                   return (
-                    <div key={coluna.id} className="flex flex-col bg-[#070b19] border border-slate-800 rounded-3xl p-4 shadow-2xl min-w-0 backdrop-blur-md">
+                    <div key={coluna.id} className="flex flex-col bg-[#070b19] border border-slate-800 rounded-3xl p-4 shadow-2xl w-72 xl:w-auto shrink-0 backdrop-blur-md">
                       <div className={`p-3 rounded-2xl border ${coluna.tagCor} mb-4 flex items-center justify-between`}>
                         <h3 className="font-black text-[11px] uppercase tracking-wider truncate">{coluna.titulo}</h3>
-                        <span className="bg-[#040612] px-2.5 py-1 rounded-xl text-[10px] font-mono font-black text-white border border-slate-700">
+                        <span className="bg-[#040612] px-2.5 py-1 rounded-xl text-[10px] font-mono font-black text-white border border-slate-700 ml-2 shrink-0">
                           {clientesColuna.length}
                         </span>
                       </div>
@@ -1074,45 +1098,45 @@ export default function WezancOS() {
                       <div className="flex flex-col gap-3 flex-1">
                         {clientesColuna.map((cliente) => (
                           <div key={cliente.id} className="bg-[#0b1021] border border-slate-800 p-4 rounded-2xl shadow-xl relative group hover:border-slate-700 transition">
-                            <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center justify-between mb-2 gap-2">
                               <h4 className="font-extrabold text-xs text-slate-100 truncate">{cliente.nome}</h4>
-                              <div className="flex items-center gap-1">
-                                <button onClick={() => abrirModalPerfil(cliente)} className="text-slate-400 hover:text-cyan-400 p-1.5 cursor-pointer" title="Ver Perfil"><User className="w-4 h-4" /></button>
-                                <button onClick={() => abrirModalEditar(cliente)} className="text-slate-400 hover:text-cyan-400 p-1.5 cursor-pointer" title="Editar"><Edit3 className="w-4 h-4" /></button>
-                                <button onClick={() => marcarComoNaoFechou(cliente.id)} className="text-slate-400 hover:text-rose-400 p-1.5 cursor-pointer" title="Mover para Não Fechou"><UserX className="w-4 h-4" /></button>
-                                <button onClick={() => excluirCliente(cliente.id)} className="text-slate-400 hover:text-rose-500 p-1.5 cursor-pointer" title="Excluir Permanentemente"><Trash2 className="w-4 h-4" /></button>
+                              <div className="flex items-center gap-1 shrink-0">
+                                <button onClick={() => abrirModalPerfil(cliente)} className="text-slate-400 hover:text-cyan-400 p-1 cursor-pointer"><User className="w-3.5 h-3.5" /></button>
+                                <button onClick={() => abrirModalEditar(cliente)} className="text-slate-400 hover:text-cyan-400 p-1 cursor-pointer"><Edit3 className="w-3.5 h-3.5" /></button>
+                                <button onClick={() => marcarComoNaoFechou(cliente.id)} className="text-slate-400 hover:text-rose-400 p-1 cursor-pointer"><UserX className="w-3.5 h-3.5" /></button>
+                                <button onClick={() => excluirCliente(cliente.id)} className="text-slate-400 hover:text-rose-500 p-1 cursor-pointer"><Trash2 className="w-3.5 h-3.5" /></button>
                               </div>
                             </div>
                             <p className="text-[10px] text-slate-300 font-medium truncate">{cliente.empresa}</p>
 
-                            <div className="mt-3 bg-[#040612] border border-slate-800 p-2.5 rounded-xl flex items-center justify-between font-mono">
-                              <strong className="text-emerald-400 text-xs font-black">R$ {cliente.valorPago}</strong>
-                              <span className="text-[9px] text-cyan-400 font-bold">{cliente.formaPagamento}</span>
+                            <div className="mt-3 bg-[#040612] border border-slate-800 p-2.5 rounded-xl flex items-center justify-between font-mono gap-2">
+                              <strong className="text-emerald-400 text-xs font-black whitespace-nowrap">R$ {cliente.valorPago}</strong>
+                              <span className="text-[9px] text-cyan-400 font-bold truncate">{cliente.formaPagamento}</span>
                             </div>
 
                             {cliente.statusOutbound === "03_abordagem" && (
-                              <button onClick={() => enviarWhatsAppMensagemAviso(cliente, "03_abordagem_outbound")} className="mt-3 w-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-black p-2.5 rounded-xl text-[10px] flex items-center justify-center gap-1.5 shadow-md cursor-pointer hover:brightness-110 transition">
-                                <Send className="w-3.5 h-3.5" /> Enviar Abordagem c/ Vídeo
+                              <button onClick={() => enviarWhatsAppMensagemAviso(cliente, "03_abordagem_outbound")} className="mt-3 w-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-black p-2.5 rounded-xl text-[10px] flex items-center justify-center gap-1.5 shadow-md cursor-pointer hover:brightness-110 transition whitespace-nowrap">
+                                <Send className="w-3.5 h-3.5 shrink-0" /> Enviar Abordagem c/ Vídeo
                               </button>
                             )}
 
                             {cliente.statusOutbound === "04_fechamento" && (
-                              <button onClick={() => enviarWhatsAppMensagemAviso(cliente, "04_fechamento_outbound")} className="mt-3 w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white font-black p-2.5 rounded-xl text-[10px] flex items-center justify-center gap-1.5 shadow-md cursor-pointer hover:brightness-110 transition">
-                                <Send className="w-3.5 h-3.5" /> Enviar Aviso de Fechamento
+                              <button onClick={() => enviarWhatsAppMensagemAviso(cliente, "04_fechamento_outbound")} className="mt-3 w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white font-black p-2.5 rounded-xl text-[10px] flex items-center justify-center gap-1.5 shadow-md cursor-pointer hover:brightness-110 transition whitespace-nowrap">
+                                <Send className="w-3.5 h-3.5 shrink-0" /> Enviar Aviso de Fechamento
                               </button>
                             )}
 
                             {deveMostrarBotaoContrato(cliente) && (
-                              <button onClick={() => setModalContrato(cliente)} className="mt-3 w-full bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 border border-cyan-500/40 py-2 px-3 rounded-xl text-[10px] font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-md animate-pulse">
-                                <FileText className="w-3.5 h-3.5 text-cyan-400" /> Gerar Contrato PDF
+                              <button onClick={() => setModalContrato(cliente)} className="mt-3 w-full bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 border border-cyan-500/40 py-2 px-3 rounded-xl text-[10px] font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-md animate-pulse whitespace-nowrap">
+                                <FileText className="w-3.5 h-3.5 text-cyan-400 shrink-0" /> Gerar Contrato PDF
                               </button>
                             )}
 
                             <div className="mt-3 pt-3 border-t border-slate-800/80 flex items-center justify-between">
-                              <span className="text-[9px] text-slate-400 uppercase font-mono font-bold">Mover:</span>
+                              <span className="text-[9px] text-slate-400 uppercase font-mono font-bold whitespace-nowrap">Mover:</span>
                               <div className="flex items-center gap-1.5">
                                 {COLUNAS_OUTBOUND.map((col) => (
-                                  <button key={col.id} onClick={() => moverStatusOutbound(cliente.id, col.id)} title={col.titulo} className={`w-4 h-4 rounded-full cursor-pointer transition ${cliente.statusOutbound === col.id ? "bg-cyan-400 ring-2 ring-cyan-400/30 scale-110" : "bg-slate-700 hover:bg-slate-500"}`} />
+                                  <button key={col.id} onClick={() => moverStatusOutbound(cliente.id, col.id)} title={col.titulo} className={`w-3.5 h-3.5 rounded-full cursor-pointer transition ${cliente.statusOutbound === col.id ? "bg-cyan-400 ring-2 ring-cyan-400/30 scale-110" : "bg-slate-700 hover:bg-slate-500"}`} />
                                 ))}
                               </div>
                             </div>
@@ -1131,7 +1155,7 @@ export default function WezancOS() {
             <div className="max-w-7xl mx-auto space-y-6">
               <div className="bg-gradient-to-r from-indigo-500/20 via-blue-500/10 to-transparent border border-indigo-500/30 p-6 rounded-3xl shadow-2xl backdrop-blur-md">
                 <h3 className="text-base font-black text-white flex items-center gap-2">
-                  <CheckSquare className="w-5 h-5 text-indigo-400" /> Sprints Ativos em Desenvolvimento ({clientesAtivosEmProducao.length})
+                  <CheckSquare className="w-5 h-5 text-indigo-400 shrink-0" /> Sprints Ativos em Desenvolvimento ({clientesAtivosEmProducao.length})
                 </h3>
               </div>
 
@@ -1144,15 +1168,15 @@ export default function WezancOS() {
                   return (
                     <div key={cliente.id} className="bg-[#070b19] border border-slate-800/80 rounded-3xl p-6 shadow-2xl flex flex-col justify-between backdrop-blur-md">
                       <div>
-                        <div className="flex items-center justify-between mb-3">
-                          <span className="text-[9px] font-mono uppercase font-bold px-2.5 py-1 rounded-md bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
+                        <div className="flex items-center justify-between mb-3 gap-2">
+                          <span className="text-[9px] font-mono uppercase font-bold px-2.5 py-1 rounded-md bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 truncate">
                             {cliente.pacote}
                           </span>
-                          <span className="text-xs font-mono font-black text-cyan-400">{progresso}% Concluído</span>
+                          <span className="text-xs font-mono font-black text-cyan-400 whitespace-nowrap">{progresso}% Concluído</span>
                         </div>
 
-                        <h4 className="font-extrabold text-sm text-white">{cliente.nome}</h4>
-                        <p className="text-xs text-slate-300 mb-4">{cliente.empresa}</p>
+                        <h4 className="font-extrabold text-sm text-white truncate">{cliente.nome}</h4>
+                        <p className="text-xs text-slate-300 mb-4 truncate">{cliente.empresa}</p>
 
                         <div className="w-full bg-[#040612] rounded-full h-2.5 mb-5 border border-slate-800 overflow-hidden">
                           <div className="bg-gradient-to-r from-indigo-500 to-cyan-400 h-full transition-all duration-500" style={{ width: `${progresso}%` }} />
@@ -1173,8 +1197,8 @@ export default function WezancOS() {
                       </div>
 
                       <div className="mt-5 pt-4 border-t border-slate-800 flex items-center justify-between text-xs">
-                        <span className="text-slate-400 font-mono">{concluidas} de {tarefas.length} tarefas</span>
-                        <div className="space-x-3">
+                        <span className="text-slate-400 font-mono whitespace-nowrap">{concluidas} de {tarefas.length} tarefas</span>
+                        <div className="space-x-3 whitespace-nowrap">
                           <button onClick={() => abrirModalPerfil(cliente)} className="text-cyan-400 hover:underline font-bold cursor-pointer">Perfil</button>
                           <button onClick={() => abrirModalEditar(cliente)} className="text-slate-300 hover:underline font-bold cursor-pointer">Editar</button>
                         </div>
@@ -1191,18 +1215,18 @@ export default function WezancOS() {
             <div className="max-w-7xl mx-auto space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                 <div className="bg-[#070b19] border border-emerald-500/30 p-6 rounded-3xl shadow-2xl backdrop-blur-md">
-                  <span className="text-xs text-slate-400 uppercase font-mono font-bold">MRR Mensal</span>
-                  <h3 className="text-2xl font-black text-emerald-400 font-mono mt-1">R$ {totalMRR.toLocaleString("pt-BR")}/mês</h3>
+                  <span className="text-xs text-slate-400 uppercase font-mono font-bold whitespace-nowrap">MRR Mensal</span>
+                  <h3 className="text-2xl font-black text-emerald-400 font-mono mt-1 whitespace-nowrap">R$ {totalMRR.toLocaleString("pt-BR")}/mês</h3>
                 </div>
                 <div className="bg-[#070b19] border border-cyan-500/30 p-6 rounded-3xl shadow-2xl backdrop-blur-md">
-                  <span className="text-xs text-slate-400 uppercase font-mono font-bold">Assinantes Ativos</span>
-                  <h3 className="text-2xl font-black text-cyan-400 font-mono mt-1">{clientesManutencao.length} Clientes</h3>
+                  <span className="text-xs text-slate-400 uppercase font-mono font-bold whitespace-nowrap">Assinantes Ativos</span>
+                  <h3 className="text-2xl font-black text-cyan-400 font-mono mt-1 whitespace-nowrap">{clientesManutencao.length} Clientes</h3>
                 </div>
               </div>
 
               <div className="bg-[#070b19] border border-slate-800 rounded-3xl p-6 shadow-2xl backdrop-blur-md space-y-4 overflow-x-auto">
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-                  <h3 className="text-sm font-black text-white">Contratos de Manutenção Mensal Vigentes</h3>
+                  <h3 className="text-sm font-black text-white whitespace-nowrap">Contratos de Manutenção Mensal Vigentes</h3>
                   <div className="flex gap-2 w-full sm:w-auto">
                     <input 
                       type="text" 
@@ -1226,28 +1250,28 @@ export default function WezancOS() {
                 <table className="w-full text-left text-xs min-w-[650px]">
                   <thead className="border-b border-slate-800 text-slate-400 uppercase font-mono text-[10px]">
                     <tr>
-                      <th className="pb-3">Cliente / Empresa</th>
-                      <th className="pb-3">WhatsApp</th>
-                      <th className="pb-3">Vencimento</th>
-                      <th className="pb-3">Mensalidade</th>
-                      <th className="pb-3 text-right">Ações & Cobrança</th>
+                      <th className="pb-3 whitespace-nowrap">Cliente / Empresa</th>
+                      <th className="pb-3 whitespace-nowrap">WhatsApp</th>
+                      <th className="pb-3 whitespace-nowrap">Vencimento</th>
+                      <th className="pb-3 whitespace-nowrap">Mensalidade</th>
+                      <th className="pb-3 text-right whitespace-nowrap">Ações & Cobrança</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800/60 font-medium">
                     {clientesManutencao.map((c) => (
                       <tr key={c.id} className="hover:bg-slate-800/30">
                         <td className="py-4">
-                          <strong className="text-white block font-bold text-xs">{c.nome}</strong>
-                          <span className="text-slate-400 text-[10px] font-mono">{c.empresa}</span>
+                          <strong className="text-white block font-bold text-xs truncate max-w-[180px]">{c.nome}</strong>
+                          <span className="text-slate-400 text-[10px] font-mono truncate block max-w-[180px]">{c.empresa}</span>
                         </td>
-                        <td className="py-4 font-mono text-cyan-400 font-bold">{c.whatsapp}</td>
-                        <td className="py-4 font-mono text-amber-400">Todo dia {c.diaVencimentoManutencao}</td>
-                        <td className="py-4 font-mono text-emerald-400 font-black text-sm">R$ {c.valorPlanoManutencao}/mês</td>
-                        <td className="py-4 text-right space-x-2">
+                        <td className="py-4 font-mono text-cyan-400 font-bold whitespace-nowrap">{c.whatsapp}</td>
+                        <td className="py-4 font-mono text-amber-400 whitespace-nowrap">Todo dia {c.diaVencimentoManutencao}</td>
+                        <td className="py-4 font-mono text-emerald-400 font-black text-sm whitespace-nowrap">R$ {c.valorPlanoManutencao}/mês</td>
+                        <td className="py-4 text-right space-x-2 whitespace-nowrap">
                           <button onClick={() => abrirModalPerfil(c)} className="text-cyan-400 hover:underline font-bold cursor-pointer">Perfil</button>
                           <button onClick={() => abrirModalEditar(c)} className="text-slate-300 hover:underline font-bold cursor-pointer">Editar</button>
-                          <button onClick={() => enviarCobrancaManutencaoWhatsApp(c)} className="bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 border border-emerald-500/40 px-3.5 py-2.5 rounded-xl text-xs font-bold inline-flex items-center gap-1.5 cursor-pointer shadow-md transition">
-                            <DollarSign className="w-3.5 h-3.5 text-emerald-400" /> Cobrar no WhatsApp
+                          <button onClick={() => enviarCobrancaManutencaoWhatsApp(c)} className="bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 border border-emerald-500/40 px-3.5 py-2.5 rounded-xl text-xs font-bold inline-flex items-center gap-1.5 cursor-pointer shadow-md transition whitespace-nowrap">
+                            <DollarSign className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> Cobrar no WhatsApp
                           </button>
                         </td>
                       </tr>
@@ -1267,33 +1291,33 @@ export default function WezancOS() {
           {menuAtivo === "naofechados" && (
             <div className="max-w-7xl mx-auto space-y-6">
               <div className="bg-[#070b19] border border-slate-800 rounded-3xl p-6 shadow-2xl backdrop-blur-md overflow-x-auto">
-                <h3 className="text-sm font-black text-white mb-4">Leads Não Fechados ({clientesNaoFechados.length})</h3>
+                <h3 className="text-sm font-black text-white mb-4 whitespace-nowrap">Leads Não Fechados ({clientesNaoFechados.length})</h3>
                 <table className="w-full text-left text-xs min-w-[650px]">
                   <thead className="border-b border-slate-800 text-slate-400 uppercase font-mono text-[10px]">
                     <tr>
-                      <th className="pb-3">Cliente / Empresa</th>
-                      <th className="pb-3">WhatsApp</th>
-                      <th className="pb-3">Motivo Informado</th>
-                      <th className="pb-3 text-right">Ações</th>
+                      <th className="pb-3 whitespace-nowrap">Cliente / Empresa</th>
+                      <th className="pb-3 whitespace-nowrap">WhatsApp</th>
+                      <th className="pb-3 whitespace-nowrap">Motivo Informado</th>
+                      <th className="pb-3 text-right whitespace-nowrap">Ações</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800/60 font-medium">
                     {clientesNaoFechados.map((c) => (
                       <tr key={c.id} className="hover:bg-slate-800/30">
                         <td className="py-4">
-                          <strong className="text-white block font-bold text-xs">{c.nome}</strong>
-                          <span className="text-slate-400 text-[10px] font-mono">{c.empresa}</span>
+                          <strong className="text-white block font-bold text-xs truncate max-w-[180px]">{c.nome}</strong>
+                          <span className="text-slate-400 text-[10px] font-mono truncate block max-w-[180px]">{c.empresa}</span>
                         </td>
-                        <td className="py-4 font-mono text-cyan-400 font-bold">{c.whatsapp}</td>
-                        <td className="py-4 text-slate-300 italic">{c.motivoNaoFechou || "Não informado"}</td>
-                        <td className="py-4 text-right space-x-2">
+                        <td className="py-4 font-mono text-cyan-400 font-bold whitespace-nowrap">{c.whatsapp}</td>
+                        <td className="py-4 text-slate-300 italic max-w-xs truncate">{c.motivoNaoFechou || "Não informado"}</td>
+                        <td className="py-4 text-right space-x-2 whitespace-nowrap">
                           <button onClick={() => abrirModalPerfil(c)} className="text-cyan-400 hover:underline font-bold cursor-pointer">Perfil</button>
                           <button onClick={() => abrirModalEditar(c)} className="text-slate-300 hover:underline font-bold cursor-pointer">Editar</button>
-                          <button onClick={() => reativarLead(c.id)} className="bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 px-3 py-2 rounded-xl text-xs font-bold inline-flex items-center gap-1 cursor-pointer">
-                            <RefreshCw className="w-3 h-3" /> Reativar
+                          <button onClick={() => reativarLead(c.id)} className="bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 px-3 py-2 rounded-xl text-xs font-bold inline-flex items-center gap-1 cursor-pointer whitespace-nowrap">
+                            <RefreshCw className="w-3 h-3 shrink-0" /> Reativar
                           </button>
-                          <button onClick={() => excluirCliente(c.id)} className="bg-rose-500/20 text-rose-300 border border-rose-500/40 px-3 py-2 rounded-xl text-xs font-bold inline-flex items-center gap-1 cursor-pointer">
-                            <Trash2 className="w-3 h-3" /> Excluir
+                          <button onClick={() => excluirCliente(c.id)} className="bg-rose-500/20 text-rose-300 border border-rose-500/40 px-3 py-2 rounded-xl text-xs font-bold inline-flex items-center gap-1 cursor-pointer whitespace-nowrap">
+                            <Trash2 className="w-3 h-3 shrink-0" /> Excluir
                           </button>
                         </td>
                       </tr>
@@ -1316,16 +1340,16 @@ export default function WezancOS() {
                 {AGENTES_IA.map((agente, idx) => (
                   <div key={idx} className="bg-[#070b19] border border-slate-800 p-6 rounded-3xl flex flex-col justify-between shadow-2xl backdrop-blur-md hover:border-slate-700 transition">
                     <div>
-                      <span className={`text-[9px] uppercase font-black px-3 py-1 rounded-md border ${agente.cor} font-mono inline-block mb-3 shadow-sm`}>
+                      <span className={`text-[9px] uppercase font-black px-3 py-1 rounded-md border ${agente.cor} font-mono inline-block mb-3 shadow-sm whitespace-nowrap`}>
                         {agente.cargo}
                       </span>
-                      <h4 className="font-black text-base text-white mb-2">{agente.nome}</h4>
+                      <h4 className="font-black text-base text-white mb-2 truncate">{agente.nome}</h4>
                       <p className="text-xs text-slate-300 leading-relaxed">{agente.descricao}</p>
                     </div>
 
                     <div className="mt-6 pt-4 border-t border-slate-800">
-                      <a href={agente.link} target="_blank" rel="noopener noreferrer" className="w-full bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-950 font-black py-3.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg cursor-pointer hover:brightness-110 transition">
-                        Abrir Chat do Agente <ExternalLink className="w-3.5 h-3.5 stroke-[3]" />
+                      <a href={agente.link} target="_blank" rel="noopener noreferrer" className="w-full bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-950 font-black py-3.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg cursor-pointer hover:brightness-110 transition whitespace-nowrap">
+                        Abrir Chat do Agente <ExternalLink className="w-3.5 h-3.5 stroke-[3] shrink-0" />
                       </a>
                     </div>
                   </div>
@@ -1356,7 +1380,7 @@ export default function WezancOS() {
                     <option value="Site Institucional">Site Institucional</option>
                     <option value="E-commerce">E-commerce</option>
                   </select>
-                  <button onClick={() => abrirModalNovo()} className="bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-950 font-black px-5 py-3.5 rounded-2xl text-xs cursor-pointer shadow-lg hover:brightness-110 transition">
+                  <button onClick={() => abrirModalNovo()} className="bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-950 font-black px-5 py-3.5 rounded-2xl text-xs cursor-pointer shadow-lg hover:brightness-110 transition whitespace-nowrap">
                     + Adicionar Novo Cliente
                   </button>
                 </div>
@@ -1364,24 +1388,24 @@ export default function WezancOS() {
                 <table className="w-full text-left text-xs min-w-[650px]">
                   <thead className="border-b border-slate-800 text-slate-400 uppercase font-mono text-[10px]">
                     <tr>
-                      <th className="pb-3">Cliente / Empresa</th>
-                      <th className="pb-3">Etapa</th>
-                      <th className="pb-3">Pacote</th>
-                      <th className="pb-3">Valor</th>
-                      <th className="pb-3 text-right">Ações</th>
+                      <th className="pb-3 whitespace-nowrap">Cliente / Empresa</th>
+                      <th className="pb-3 whitespace-nowrap">Etapa</th>
+                      <th className="pb-3 whitespace-nowrap">Pacote</th>
+                      <th className="pb-3 whitespace-nowrap">Valor</th>
+                      <th className="pb-3 text-right whitespace-nowrap">Ações</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800/60 font-medium">
                     {clientesFiltradosBase.map((c) => (
                       <tr key={c.id} className="hover:bg-slate-800/30">
                         <td className="py-4">
-                          <strong className="text-white block font-bold text-xs">{c.nome}</strong>
-                          <span className="text-slate-400 text-[10px] font-mono">{c.empresa}</span>
+                          <strong className="text-white block font-bold text-xs truncate max-w-[200px]">{c.nome}</strong>
+                          <span className="text-slate-400 text-[10px] font-mono truncate block max-w-[200px]">{c.empresa}</span>
                         </td>
-                        <td className="py-4 text-slate-300 font-mono">{getEtapaFormatada(c)}</td>
-                        <td className="py-4 text-pink-400 font-bold">{c.pacote}</td>
-                        <td className="py-4 font-mono text-emerald-400 font-black">R$ {c.valorPago}</td>
-                        <td className="py-4 text-right space-x-2">
+                        <td className="py-4 text-slate-300 font-mono whitespace-nowrap">{getEtapaFormatada(c)}</td>
+                        <td className="py-4 text-pink-400 font-bold whitespace-nowrap">{c.pacote}</td>
+                        <td className="py-4 font-mono text-emerald-400 font-black whitespace-nowrap">R$ {c.valorPago}</td>
+                        <td className="py-4 text-right space-x-2 whitespace-nowrap">
                           <button onClick={() => abrirModalPerfil(c)} className="text-cyan-400 hover:underline font-bold cursor-pointer">Perfil</button>
                           <button onClick={() => abrirModalEditar(c)} className="text-slate-300 hover:underline font-bold cursor-pointer">Editar</button>
                           <button onClick={() => excluirCliente(c.id)} className="text-rose-400 hover:underline font-bold cursor-pointer">Excluir</button>
@@ -1402,35 +1426,35 @@ export default function WezancOS() {
           {/* ABA 8: FINANCEIRO */}
           {menuAtivo === "financeiro" && (
             <div className="max-w-7xl mx-auto space-y-6">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#070b19] border border-slate-800 p-6 rounded-3xl shadow-2xl backdrop-blur-md">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-[#070b19] border border-slate-800 p-6 rounded-3xl shadow-2xl backdrop-blur-md">
                 <div>
-                  <h3 className="text-base font-black text-white">Relatório Financeiro & Gerador PDF</h3>
+                  <h3 className="text-base font-black text-white whitespace-nowrap">Relatório Financeiro & Gerador PDF</h3>
                   <p className="text-xs text-slate-400 mt-1">Gere o relatório executivo detalhado com receitas por pacote, MRR e despesas.</p>
                 </div>
-                <button onClick={baixarRelatorioFinanceiroPDF} className="w-full sm:w-auto bg-gradient-to-r from-emerald-400 to-teal-600 text-slate-950 font-black px-5 py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 cursor-pointer hover:brightness-110 transition">
-                  <PrinterIcon className="w-4 h-4 stroke-[3]" /> Gerar PDF do Financeiro
+                <button onClick={baixarRelatorioFinanceiroPDF} className="w-full sm:w-auto bg-gradient-to-r from-emerald-400 to-teal-600 text-slate-950 font-black px-5 py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 cursor-pointer hover:brightness-110 transition whitespace-nowrap">
+                  <PrinterIcon className="w-4 h-4 stroke-[3] shrink-0" /> Gerar PDF do Financeiro
                 </button>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                 <div className="bg-[#070b19] border border-emerald-500/30 p-6 rounded-3xl shadow-2xl backdrop-blur-md">
-                  <span className="text-xs text-slate-400 uppercase font-mono font-bold flex items-center gap-1.5"><TrendingUp className="w-4 h-4 text-emerald-400" /> Receita Total</span>
-                  <h3 className="text-2xl font-black text-emerald-400 font-mono mt-1">R$ {totalReceitas.toLocaleString("pt-BR")}</h3>
+                  <span className="text-xs text-slate-400 uppercase font-mono font-bold flex items-center gap-1.5 whitespace-nowrap"><TrendingUp className="w-4 h-4 text-emerald-400 shrink-0" /> Receita Total</span>
+                  <h3 className="text-2xl font-black text-emerald-400 font-mono mt-1 whitespace-nowrap">R$ {totalReceitas.toLocaleString("pt-BR")}</h3>
                 </div>
                 <div className="bg-[#070b19] border border-rose-500/30 p-6 rounded-3xl shadow-2xl backdrop-blur-md">
-                  <span className="text-xs text-slate-400 uppercase font-mono font-bold flex items-center gap-1.5"><TrendingDown className="w-4 h-4 text-rose-400" /> Despesas Totais</span>
-                  <h3 className="text-2xl font-black text-rose-400 font-mono mt-1">R$ {totalDespesas.toLocaleString("pt-BR")}</h3>
+                  <span className="text-xs text-slate-400 uppercase font-mono font-bold flex items-center gap-1.5 whitespace-nowrap"><TrendingDown className="w-4 h-4 text-rose-400 shrink-0" /> Despesas Totais</span>
+                  <h3 className="text-2xl font-black text-rose-400 font-mono mt-1 whitespace-nowrap">R$ {totalDespesas.toLocaleString("pt-BR")}</h3>
                 </div>
                 <div className="bg-[#070b19] border border-cyan-500/30 p-6 rounded-3xl shadow-2xl backdrop-blur-md">
-                  <span className="text-xs text-slate-400 uppercase font-mono font-bold flex items-center gap-1.5"><ArrowUpRight className="w-4 h-4 text-cyan-400" /> Lucro Líquido</span>
-                  <h3 className="text-2xl font-black text-cyan-400 font-mono mt-1">R$ {lucroLiquido.toLocaleString("pt-BR")}</h3>
+                  <span className="text-xs text-slate-400 uppercase font-mono font-bold flex items-center gap-1.5 whitespace-nowrap"><ArrowUpRight className="w-4 h-4 text-cyan-400 shrink-0" /> Lucro Líquido</span>
+                  <h3 className="text-2xl font-black text-cyan-400 font-mono mt-1 whitespace-nowrap">R$ {lucroLiquido.toLocaleString("pt-BR")}</h3>
                 </div>
               </div>
 
               <div className="bg-[#070b19] border border-slate-800 rounded-3xl p-6 shadow-2xl backdrop-blur-md space-y-5 overflow-x-auto">
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <h3 className="text-sm font-black text-white">Transações & Lançamentos Financeiros</h3>
-                  <button onClick={() => setModalTransacao(true)} className="w-full sm:w-auto bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-950 font-black px-4.5 py-3 rounded-xl text-xs cursor-pointer shadow-md">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <h3 className="text-sm font-black text-white whitespace-nowrap">Transações & Lançamentos Financeiros</h3>
+                  <button onClick={() => setModalTransacao(true)} className="w-full sm:w-auto bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-950 font-black px-4.5 py-3 rounded-xl text-xs cursor-pointer shadow-md whitespace-nowrap">
                     + Novo Lançamento
                   </button>
                 </div>
@@ -1449,23 +1473,23 @@ export default function WezancOS() {
                 <table className="w-full text-left text-xs min-w-[650px]">
                   <thead className="border-b border-slate-800 text-slate-400 uppercase font-mono text-[10px]">
                     <tr>
-                      <th className="pb-3">Data</th>
-                      <th className="pb-3">Descrição</th>
-                      <th className="pb-3">Tipo / Categoria</th>
-                      <th className="pb-3 text-right">Valor</th>
+                      <th className="pb-3 whitespace-nowrap">Data</th>
+                      <th className="pb-3 whitespace-nowrap">Descrição</th>
+                      <th className="pb-3 whitespace-nowrap">Tipo / Categoria</th>
+                      <th className="pb-3 text-right whitespace-nowrap">Valor</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800/60 font-medium">
                     {transacoesFiltradas.map((t) => (
                       <tr key={t.id} className="hover:bg-slate-800/30">
-                        <td className="py-4 font-mono text-slate-400">{t.data}</td>
-                        <td className="py-4 text-white font-bold">{t.descricao}</td>
-                        <td className="py-4">
+                        <td className="py-4 font-mono text-slate-400 whitespace-nowrap">{t.data}</td>
+                        <td className="py-4 text-white font-bold truncate max-w-[250px]">{t.descricao}</td>
+                        <td className="py-4 whitespace-nowrap">
                           <span className={`px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase ${t.tipo === "Receita" || t.tipo === "Manutenção MRR" ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30" : "bg-rose-500/15 text-rose-400 border border-rose-500/30"}`}>
                             {t.tipo} {t.pacoteAssociado ? `• ${t.pacoteAssociado}` : ""}
                           </span>
                         </td>
-                        <td className={`py-4 text-right font-mono font-black ${t.tipo === "Receita" || t.tipo === "Manutenção MRR" ? "text-emerald-400" : "text-rose-400"}`}>
+                        <td className={`py-4 text-right font-mono font-black whitespace-nowrap ${t.tipo === "Receita" || t.tipo === "Manutenção MRR" ? "text-emerald-400" : "text-rose-400"}`}>
                           {t.tipo === "Receita" || t.tipo === "Manutenção MRR" ? `+ R$ ${t.valor.toLocaleString("pt-BR")}` : `- R$ ${t.valor.toLocaleString("pt-BR")}`}
                         </td>
                       </tr>
@@ -1484,7 +1508,7 @@ export default function WezancOS() {
         </div>
       </main>
 
-      {/* MODAL CLIENTE */}
+      {/* MODAIS (MANTIDOS E COMPATÍVEIS) */}
       {modalCliente && (
         <div className="fixed inset-0 bg-[#040612]/90 backdrop-blur-xl flex items-center justify-center p-4 z-50">
           <div className="bg-[#070b19] border border-slate-800 rounded-3xl w-full max-w-xl p-6 sm:p-8 shadow-2xl relative z-50 max-h-[90vh] overflow-y-auto">
@@ -1518,7 +1542,7 @@ export default function WezancOS() {
               <div className="bg-[#040612] p-4 rounded-2xl border border-slate-800 space-y-3">
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-bold text-cyan-400 flex items-center gap-2">
-                    <DollarSign className="w-4 h-4 text-cyan-400" /> Contratou Plano Mensal de Manutenção?
+                    <DollarSign className="w-4 h-4 text-cyan-400 shrink-0" /> Contratou Plano Mensal de Manutenção?
                   </label>
                   <input type="checkbox" checked={temPlanoManutencao} onChange={e => setTemPlanoManutencao(e.target.checked)} className="w-4 h-4 accent-cyan-500 cursor-pointer" />
                 </div>
@@ -1542,7 +1566,6 @@ export default function WezancOS() {
         </div>
       )}
 
-      {/* MODAL TRANSACAO */}
       {modalTransacao && (
         <div className="fixed inset-0 bg-[#040612]/90 backdrop-blur-xl flex items-center justify-center p-4 z-50">
           <div className="bg-[#070b19] border border-slate-800 rounded-3xl w-full max-w-md p-6 sm:p-8 shadow-2xl relative z-50">
@@ -1556,7 +1579,7 @@ export default function WezancOS() {
                 </select>
 
                 {tipoTrans === "Despesa" ? (
-                  <input type="text" placeholder="Nome da Despesa (Ex: Hospedagem, API) *" required value={descTrans} onChange={e => setDescTrans(e.target.value)} className="w-full bg-[#040612] border border-slate-800 rounded-xl p-3.5 text-xs text-white outline-none" />
+                  <input type="text" placeholder="Nome da Despesa *" required value={descTrans} onChange={e => setDescTrans(e.target.value)} className="w-full bg-[#040612] border border-slate-800 rounded-xl p-3.5 text-xs text-white outline-none" />
                 ) : (
                   <select value={pacoteTrans} onChange={e => setPacoteTrans(e.target.value)} className="bg-[#040612] border border-slate-800 rounded-xl p-3.5 text-xs text-white outline-none">
                     <option value="Landing Page Express">Landing Page Express</option>
@@ -1581,7 +1604,6 @@ export default function WezancOS() {
         </div>
       )}
 
-      {/* MODAL PERFIL */}
       {modalPerfilCliente && (
         <div className="fixed inset-0 bg-[#040612]/90 backdrop-blur-xl flex items-center justify-center p-4 z-50">
           <div className="bg-[#070b19] border border-slate-800 rounded-3xl w-full max-w-xl p-6 sm:p-8 shadow-2xl relative z-50 text-slate-200">
@@ -1604,7 +1626,7 @@ export default function WezancOS() {
         </div>
       )}
 
-      {/* MODAL RELATORIO FINANCEIRO PDF (INVISIVEL PARA IMPRESSAO) */}
+      {/* RELATORIO FINANCEIRO IMPRESSAO */}
       <div className="hidden">
         <div ref={relatorioFinanceiroRef} style={{ fontFamily: 'Inter, sans-serif', color: '#0f172a', background: '#ffffff', padding: '10mm' }}>
           <h1 style={{ fontSize: '16pt', fontWeight: 800, textAlign: 'center', marginBottom: '4px', textTransform: 'uppercase', color: '#0f172a' }}>WEZANC TECHNOLOGY</h1>
@@ -1732,28 +1754,28 @@ export default function WezancOS() {
                 )}
               </div>
 
-              <p style={{ margin: '8px 0', textAlign: 'justify' }}><strong>CLÁUSULA PRIMEIRA - DO OBJETO E ESCOPO:</strong> O presente contrato tem por objeto a prestação de serviços técnicos de desenvolvimento web e software pela CONTRATADA para a criação do projeto referente ao pacote <strong>{modalContrato.pacote}</strong> da empresa CONTRATANTE. O escopo compreende estritamente o layout responsivo, integração com links oficiais/WhatsApp e otimização de código acordada na fase de aprovação.</p>
+              <p style={{ margin: '8px 0', textAlign: 'justify' }}><strong>CLÁUSULA PRIMEIRA - DO OBJETO E ESCOPO:</strong> O presente contrato tem por objeto a prestação de serviços técnicos de desenvolvimento web e software pela CONTRATADA para a criação do projeto referente ao pacote <strong>{modalContrato.pacote}</strong> da empresa CONTRATANTE.</p>
               
-              <p style={{ margin: '8px 0', textAlign: 'justify' }}><strong>CLÁUSULA SEGUNDA - DOS PRAZOS E FORNECIMENTO DE MATERIAL:</strong> O prazo de desenvolvimento iniciará após a entrega total de logotipos, imagens e textos pelo CONTRATANTE. Caso o CONTRATANTE atrase o envio de materiais ou respostas de validação por prazo superior a 15 (quinze) dias corridos, o cronograma será suspenso sem qualquer penalidade à CONTRATADA.</p>
+              <p style={{ margin: '8px 0', textAlign: 'justify' }}><strong>CLÁUSULA SEGUNDA - DOS PRAZOS E FORNECIMENTO DE MATERIAL:</strong> O prazo de desenvolvimento iniciará após a entrega total de logotipos, imagens e textos pelo CONTRATANTE.</p>
               
-              <p style={{ margin: '8px 0', textAlign: 'justify' }}><strong>CLÁUSULA TERCEIRA - DO VALOR E FORMA DE PAGAMENTO:</strong> Pelos serviços acordados, o CONTRATANTE pagará o valor fixo de <strong>R$ {modalContrato.valorPago.toLocaleString("pt-BR")}</strong> via <strong>{modalContrato.formaPagamento}</strong>. O não pagamento nas datas estipuladas ensejará a suspensão temporária da hospedagem/sistema até a devida regularização.</p>
+              <p style={{ margin: '8px 0', textAlign: 'justify' }}><strong>CLÁUSULA TERCEIRA - DO VALOR E FORMA DE PAGAMENTO:</strong> Pelos serviços acordados, o CONTRATANTE pagará o valor fixo de <strong>R$ {modalContrato.valorPago.toLocaleString("pt-BR")}</strong> via <strong>{modalContrato.formaPagamento}</strong>.</p>
               
-              <p style={{ margin: '8px 0', textAlign: 'justify' }}><strong>CLÁUSULA QUARTA - DA GARANTIA TÉCNICA (30 DIAS):</strong> A CONTRATADA concede 30 (trinta) dias de garantia técnica integral, contados a partir da data de publicação do projeto, exclusivamente para correção de falhas de código (bugs), links quebrados ou desconfigurações do escopo entregue.</p>
+              <p style={{ margin: '8px 0', textAlign: 'justify' }}><strong>CLÁUSULA QUARTA - DA GARANTIA TÉCNICA (30 DIAS):</strong> A CONTRATADA concede 30 (trinta) dias de garantia técnica integral, contados a partir da data de publicação do projeto.</p>
               
-              <p style={{ margin: '8px 0', textAlign: 'justify' }}><strong>CLÁUSULA QUINTA - DE PERSONALIZAÇÕES FUTURAS E ALTERAÇÕES:</strong> Qualquer pedido de alteração de layout, inclusão de novas páginas, criação de novos recursos, artes ou personalizações solicitadas APÓS a aprovação final do projeto NÃO INTEGRAM este contrato nem a garantia técnica gratuita. Tais demandas serão objeto de orçamento avulso específico ou aditivo contratual.</p>
+              <p style={{ margin: '8px 0', textAlign: 'justify' }}><strong>CLÁUSULA QUINTA - DE PERSONALIZAÇÕES FUTURAS:</strong> Qualquer pedido de alteração de layout ou inclusão de novas páginas solicitadas APÓS a aprovação final do projeto NÃO INTEGRAM este contrato.</p>
               
-              <p style={{ margin: '8px 0', textAlign: 'justify' }}><strong>CLÁUSULA SEXTA - DA MANUTENÇÃO PREVENTIVA E SUPORTE CONTINUADO:</strong> Serviços de manutenção contínua, alterações periódicas de texto/imagem, backups de segurança e atualizações constantes dependem da contratação de um Plano de Manutenção Mensal. Inexistindo contrato de manutenção vigente, atendimentos pós-garantia serão faturados por hora técnica mediante aceite do CONTRATANTE.</p>
+              <p style={{ margin: '8px 0', textAlign: 'justify' }}><strong>CLÁUSULA SEXTA - DA MANUTENÇÃO PREVENTIVA:</strong> Serviços de manutenção contínua e backups dependem da contratação de um Plano de Manutenção Mensal.</p>
 
               {modalContrato.temPlanoManutencao && (
                 <div style={{ backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0', padding: '12px', borderRadius: '6px', margin: '10px 0' }}>
                   <strong style={{ color: '#166534', display: 'block', marginBottom: '4px', textTransform: 'uppercase', fontSize: '8.5pt' }}>CLÁUSULA SÉTIMA (PARTE) - DO PLANO DE MANUTENÇÃO MENSAL (MRR):</strong>
-                  <p style={{ margin: '3px 0', textAlign: 'justify', color: '#14532d' }}>Adicionalmente ao escopo de desenvolvimento, o CONTRATANTE contrata o Plano Mensal de Suporte e Manutenção Preventiva no valor de <strong>R$ {modalContrato.valorPlanoManutencao} por mês</strong>, com vencimento todo dia <strong>{modalContrato.diaVencimentoManutencao}</strong> de cada mês, cobrindo atualizações de segurança contínuas e suporte técnico mensal.</p>
+                  <p style={{ margin: '3px 0', textAlign: 'justify', color: '#14532d' }}>Adicionalmente ao escopo de desenvolvimento, o CONTRATANTE contrata o Plano Mensal no valor de <strong>R$ {modalContrato.valorPlanoManutencao} por mês</strong>, com vencimento todo dia <strong>{modalContrato.diaVencimentoManutencao}</strong>.</p>
                 </div>
               )}
 
-              <p style={{ margin: '8px 0', textAlign: 'justify' }}><strong>CLÁUSULA OITAVA - PROPRIEDADE INTELECTUAL E PORTFÓLIO:</strong> Com a quitação integral do valor acordado, os direitos de uso do projeto final pertencem ao CONTRATANTE. A CONTRATADA reserva-se o direito de divulgar a imagem do projeto e a marca em seu portfólio comercial digital e redes sociais institucionais.</p>
+              <p style={{ margin: '8px 0', textAlign: 'justify' }}><strong>CLÁUSULA OITAVA - PROPRIEDADE INTELECTUAL:</strong> Com a quitação integral do valor acordado, os direitos de uso do projeto final pertencem ao CONTRATANTE.</p>
               
-              <p style={{ margin: '8px 0', textAlign: 'justify' }}><strong>CLÁUSULA NONA - DO FORO:</strong> As partes elegem o Foro da Comarca de Pouso Alegre - MG para dirimir quaisquer litígios oriundos deste contrato, com renúncia expressa a qualquer outro.</p>
+              <p style={{ margin: '8px 0', textAlign: 'justify' }}><strong>CLÁUSULA NONA - DO FORO:</strong> As partes elegem o Foro da Comarca de Pouso Alegre - MG.</p>
 
               <table style={{ width: '100%', marginTop: '35px', borderCollapse: 'collapse' }}>
                 <tbody>
@@ -1775,11 +1797,11 @@ export default function WezancOS() {
 
             <div className="flex flex-wrap gap-3 pt-6">
               <button onClick={() => setModalContrato(null)} className="flex-1 bg-slate-800 hover:bg-slate-700 text-white py-3.5 rounded-xl text-xs font-bold cursor-pointer transition">Fechar</button>
-              <button onClick={() => enviarWhatsAppContrato(modalContrato)} className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white py-3.5 rounded-xl text-xs font-black flex items-center justify-center gap-2 cursor-pointer shadow-md transition">
-                <Send className="w-4 h-4" /> Enviar no WhatsApp
+              <button onClick={() => enviarWhatsAppContrato(modalContrato)} className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white py-3.5 rounded-xl text-xs font-black flex items-center justify-center gap-2 cursor-pointer shadow-md transition whitespace-nowrap">
+                <Send className="w-4 h-4 shrink-0" /> Enviar no WhatsApp
               </button>
-              <button onClick={baixarContratoPDF} className="flex-1 bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-950 py-3.5 rounded-xl text-xs font-black flex items-center justify-center gap-2 cursor-pointer shadow-md hover:brightness-110 transition">
-                <FileDown className="w-4 h-4 stroke-[3]" /> Salvar em PDF
+              <button onClick={baixarContratoPDF} className="flex-1 bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-950 py-3.5 rounded-xl text-xs font-black flex items-center justify-center gap-2 cursor-pointer shadow-md hover:brightness-110 transition whitespace-nowrap">
+                <FileDown className="w-4 h-4 stroke-[3] shrink-0" /> Salvar em PDF
               </button>
             </div>
           </div>
