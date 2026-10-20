@@ -1619,17 +1619,23 @@ export default function WezancOS() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="text-xs text-slate-400 block mb-1 font-bold">Forma de Pagamento</label>
-                  <select value={formaPagamento} onChange={e => setFormaPagamento(e.target.value)} className="w-full bg-[#030712] border border-slate-800 rounded-xl p-2.5 text-xs text-white outline-none focus:border-cyan-500">
-                    <option value="Pix à vista">Pix à vista</option>
-                    <option value="Dinheiro">Dinheiro</option>
-                    <option value="Cartão de Crédito (1x)">Cartão de Crédito (1x)</option>
-                    <option value="Cartão de Crédito (3x)">Cartão de Crédito (3x)</option>
-                    <option value="Cartão de Crédito (6x)">Cartão de Crédito (6x)</option>
-                    <option value="Cartão de Crédito (10x)">Cartão de Crédito (10x)</option>
-                  </select>
-                </div>
+  <div>
+    <label className="text-xs text-slate-400 block mb-1 font-bold">Forma de Pagamento</label>
+    <select 
+      value={formaPagamento} 
+      onChange={e => setFormaPagamento(e.target.value)} 
+      className="w-full bg-[#030712] border border-slate-800 rounded-xl p-2.5 text-xs text-white outline-none focus:border-cyan-500"
+    >
+      <option value="Pix à vista">Pix à vista</option>
+      <option value="Dinheiro">Dinheiro</option>
+      {Array.from({ length: 12 }, (_, i) => i + 1).map((num) => (
+        <option key={num} value={`Cartão de Crédito (${num}x)`}>
+          Cartão de Crédito ({num}x)
+        </option>
+      ))}
+    </select>
+  </div>
+</div>
                 <div>
                   <label className="text-xs text-slate-400 block mb-1 font-bold">Valor do Projeto (R$)</label>
                   <input type="number" required value={valorPago} onChange={e => setValorPago(e.target.value === "" ? "" : Number(e.target.value))} className="w-full bg-[#030712] border border-slate-800 rounded-xl p-2.5 text-xs text-white outline-none font-mono focus:border-cyan-500" />
